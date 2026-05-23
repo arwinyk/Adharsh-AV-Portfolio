@@ -4,27 +4,27 @@
 /* ─── Cinematic Neo-Noir Design System ──────────────────── */
 :root {
   /* Backgrounds */
-  --bg-base:      #0B0B0F;
-  --bg-primary:   #0B0B0F;
-  --bg-secondary: #101116;
-  --bg-tertiary:  #16171D;
-  --bg-card:      #16171D;
+  --bg-base:      #050507;
+  --bg-primary:   #050507;
+  --bg-secondary: #0A0A0C;
+  --bg-tertiary:  #111114;
+  --bg-card:      #0C0C0F;
 
   /* Accent System — Electric Blue → Violet */
   --accent:       #3B82F6;
   --accent2:      #8B5CF6;
   --accent-mid:   #6366F1;
-  --accent-glow:  rgba(59, 130, 246, 0.12);
-  --accent2-glow: rgba(139, 92, 246, 0.12);
+  --accent-glow:  rgba(59, 130, 246, 0.15);
+  --accent2-glow: rgba(139, 92, 246, 0.15);
 
   /* Text */
-  --text-primary:   #E4E1E7;
-  --text-secondary: #9CA3AF;
-  --text-tertiary:  #6B7280;
+  --text-primary:   #FAFAFA;
+  --text-secondary: #A1A1AA;
+  --text-tertiary:  #71717A;
 
   /* Borders */
-  --border:       rgba(255, 255, 255, 0.08);
-  --border-hover: rgba(59, 130, 246, 0.45);
+  --border:       rgba(255, 255, 255, 0.06);
+  --border-hover: rgba(255, 255, 255, 0.15);
 
   /* Functional */
   --success:      #22C55E;
@@ -65,25 +65,14 @@ body {
   font-family: 'Geist', 'Inter', system-ui, sans-serif;
   background: var(--bg-base);
   color: var(--text-primary);
-  line-height: 1.7;
+  line-height: 1.75;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* ─── Film Grain Overlay ──────────────────────────────────── */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 999;
-  pointer-events: none;
-  opacity: 0.028;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 200px 200px;
-}
+/* Removed Film Grain Overlay for performance */
 
 /* ─── Custom Scrollbar ───────────────────────────────────── */
 ::-webkit-scrollbar { width: 3px; }
@@ -98,7 +87,7 @@ h1, h2, h3, h4, h5, h6 {
   font-family: 'Sora', system-ui, sans-serif;
   font-weight: 700;
   line-height: 1.1;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.04em;
   color: var(--text-primary);
 }
 
@@ -143,11 +132,7 @@ h1, h2, h3, h4, h5, h6 {
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
-@keyframes ambient-drift {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(20px, -15px) scale(1.05); }
-  66% { transform: translate(-10px, 10px) scale(0.98); }
-}
+
 
 /* ─── Animation Classes ──────────────────────────────────── */
 .animate-pulse-dot    { animation: pulse-dot 2s ease-in-out infinite; }
@@ -156,24 +141,19 @@ h1, h2, h3, h4, h5, h6 {
 .animate-glow-pulse   { animation: glow-pulse 3s ease-in-out infinite; }
 .animate-spin-slow    { animation: spin-slow 20s linear infinite; }
 .animate-whatsapp     { animation: whatsapp-pulse 2.5s ease-in-out infinite; }
-.animate-ambient      { animation: ambient-drift 8s ease-in-out infinite; }
 
-/* ─── Glass Card — Elevation System ──────────────────────── */
+
+/* ─── Premium Card — Elevation System ──────────────────────── */
 .glass-card {
-  background: rgba(255, 255, 255, 0.025);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s cubic-bezier(0.4,0,0.2,1);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
 }
 .glass-card:hover {
-  border-color: rgba(59, 130, 246, 0.35);
-  box-shadow:
-    0 0 0 1px rgba(59, 130, 246, 0.1),
-    0 8px 40px rgba(0, 0, 0, 0.5),
-    0 0 60px rgba(59, 130, 246, 0.06);
-  transform: translateY(-6px);
+  border-color: var(--border-hover);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
 }
 .light .glass-card {
   background: rgba(255, 255, 255, 0.85);
@@ -181,16 +161,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 .light .glass-card:hover {
   border-color: rgba(59, 130, 246, 0.3);
-  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.08);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 }
 
-/* Glass Card — Level 2 (elevated overlay) */
+/* Premium Card — Level 2 (elevated overlay) */
 .glass-card-2 {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(22, 23, 29, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-xl);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
 }
 
 /* ─── Gradient Text ──────────────────────────────────────── */
@@ -286,32 +264,22 @@ h1, h2, h3, h4, h5, h6 {
   gap: 8px;
   padding: 13px 30px;
   border-radius: var(--radius-full);
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
-  color: #fff;
+  background: var(--text-primary);
+  color: var(--bg-base);
   font-family: 'Geist', sans-serif;
   font-weight: 600;
   font-size: 0.875rem;
   border: none;
   cursor: pointer;
-  transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.25s ease;
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
   text-decoration: none;
   letter-spacing: 0.01em;
   position: relative;
   overflow: hidden;
 }
-.btn-primary::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, var(--accent2) 0%, var(--accent) 100%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  border-radius: inherit;
-}
-.btn-primary:hover::before { opacity: 1; }
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(59, 130, 246, 0.4), 0 4px 12px rgba(139, 92, 246, 0.2);
+  transform: translateY(-1px);
+  opacity: 0.9;
 }
 .btn-primary span, .btn-primary svg { position: relative; z-index: 1; }
 
@@ -329,15 +297,14 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 0.875rem;
   border: 1px solid var(--border);
   cursor: pointer;
-  transition: border-color 0.25s ease, background 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+  transition: border-color 0.4s ease, background 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
   text-decoration: none;
   letter-spacing: 0.01em;
 }
 .btn-ghost:hover {
-  border-color: rgba(59, 130, 246, 0.5);
-  background: rgba(59, 130, 246, 0.06);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.03);
+  transform: translateY(-1px);
 }
 
 /* ─── Divider ────────────────────────────────────────────── */
@@ -420,14 +387,7 @@ h1, h2, h3, h4, h5, h6 {
   background: linear-gradient(to bottom, transparent, var(--accent), var(--accent2), transparent);
 }
 
-/* ─── Ambient Glow Orb ───────────────────────────────────── */
-.ambient-glow {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  pointer-events: none;
-  will-change: transform;
-}
+/* Removed Ambient Glow Orb for performance */
 
 /* ─── Mesh Background ─────────────────────────────────────── */
 .mesh-bg {
@@ -467,27 +427,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
-/* ─── Animated card border ───────────────────────────────── */
-.card-animated-border {
-  position: relative;
-  overflow: hidden;
-}
-.card-animated-border::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  padding: 1px;
-  background: linear-gradient(90deg, transparent, #3B82F6, #8B5CF6, transparent);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  opacity: 0;
-  border-radius: inherit;
-  transition: opacity 0.45s ease;
-  pointer-events: none;
-}
-.card-animated-border:hover::after { opacity: 1; }
+/* Removed card-animated-border for performance */
 
 /* ─── Process Step Connector ─────────────────────────────── */
 .step-connector {

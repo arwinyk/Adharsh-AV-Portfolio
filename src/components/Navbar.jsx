@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useLocation } from 'react-router-dom';
 import { Moon, Sun, Menu, X, ArrowUpRight } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -15,6 +15,7 @@ export default function Navbar() {
   const { theme, toggle } = useTheme();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 48);
@@ -27,18 +28,36 @@ export default function Navbar() {
     return () => { document.body.style.overflow = ''; };
   }, [mobileOpen]);
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    // eslint-disable-next-line
+    setMobileOpen(false);
+  }, [location.pathname]);
+
   return (
     <>
       <header
         style={{
-          position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
-          transition: 'background 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease',
-          background: scrolled ? 'rgba(10,10,10,0.82)' : 'transparent',
-          backdropFilter: scrolled ? 'blur(20px)' : 'none',
-          borderBottom: scrolled ? '1px solid rgba(255,255,255,0.07)' : '1px solid transparent',
+          position: 'fixed', top: scrolled ? 16 : 24, left: 0, right: 0, zIndex: 100,
+          display: 'flex', justifyContent: 'center',
+          transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+          pointerEvents: 'none',
+          padding: '0 20px',
         }}
       >
-        <div className="container-xl" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 68 }}>
+        <div style={{
+          pointerEvents: 'auto',
+          width: '100%',
+          maxWidth: scrolled ? 840 : 1200,
+          height: 64,
+          background: scrolled ? 'rgba(5,5,7,0.98)' : 'transparent',
+          border: scrolled ? '1px solid var(--border)' : '1px solid transparent',
+          borderRadius: scrolled ? 999 : 0,
+          transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: scrolled ? '0 12px 0 24px' : '0',
+          boxShadow: scrolled ? '0 20px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)' : 'none',
+        }}>
           {/* Logo */}
           <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8 }}>
             <span style={{
@@ -53,25 +72,38 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Nav */}
-          <nav style={{ display: 'flex', alignItems: 'center', gap: 8 }} className="hidden-mobile">
-            {navLinks.map(({ label, to }) => (
-              <NavLink
-                key={to}
-                to={to}
-                className="link-underline"
-                style={({ isActive }) => ({
-                  padding: '6px 14px',
-                  borderRadius: 8,
-                  fontSize: '0.875rem',
-                  fontWeight: 500,
-                  color: isActive ? 'var(--accent)' : 'var(--text-secondary)',
-                  textDecoration: 'none',
-                  transition: 'color 0.2s ease',
-                })}
-              >
-                {label}
-              </NavLink>
-            ))}
+          <nav style={{ display: 'flex', alignItems: 'center', gap: 4, position: 'relative' }} className="hidden-mobile">
+            {navLinks.map(({ label, to }) => {
+              // We want exact match for active state
+              const isActive = location.pathname.startsWith(to);
+              return (
+                <Link
+                  key={to}
+                  to={to}
+                  style={{ position: 'relative', textDecoration: 'none' }}
+                >
+                  {isActive && (
+                    <div
+                      style={{
+                        position: 'absolute', inset: 0,
+                        background: 'rgba(255,255,255,0.08)',
+                        borderRadius: 999,
+                        zIndex: 0,
+                      }}
+                    />
+                  )}
+                  <span style={{
+                    position: 'relative', zIndex: 1,
+                    padding: '8px 16px', display: 'block',
+                    fontSize: '0.85rem', fontWeight: 500,
+                    color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
+                    transition: 'color 0.2s',
+                  }}>
+                    {label}
+                  </span>
+                </Link>
+              );
+            })}
           </nav>
 
           {/* Right controls */}
@@ -79,20 +111,28 @@ export default function Navbar() {
             <button
               onClick={toggle}
               style={{
-                width: 38, height: 38, borderRadius: 10,
-                border: '1px solid var(--border)',
-                background: 'transparent',
+                width: 40, height: 40, borderRadius: '50%',
+                border: scrolled ? '1px solid var(--border)' : '1px solid transparent',
+                background: scrolled ? 'rgba(255,255,255,0.03)' : 'transparent',
                 color: 'var(--text-secondary)',
                 cursor: 'pointer',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                transition: 'border-color 0.2s, color 0.2s',
+                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.color = 'var(--text-primary)';
+                if (scrolled) e.currentTarget.style.background = 'rgba(255,255,255,0.06)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.color = 'var(--text-secondary)';
+                if (scrolled) e.currentTarget.style.background = 'rgba(255,255,255,0.03)';
               }}
               aria-label="Toggle theme"
             >
               {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
             </button>
 
-            <Link to="/contact" className="btn-primary hidden-mobile" style={{ padding: '9px 20px', fontSize: '0.825rem' }}>
+            <Link to="/contact" className="btn-primary hidden-mobile" style={{ padding: '10px 24px', fontSize: '0.85rem' }}>
               Let's Work <ArrowUpRight size={14} />
             </Link>
 
@@ -101,9 +141,9 @@ export default function Navbar() {
               onClick={() => setMobileOpen(o => !o)}
               className="show-mobile"
               style={{
-                width: 38, height: 38, borderRadius: 10,
-                border: '1px solid var(--border)',
-                background: 'transparent',
+                width: 40, height: 40, borderRadius: '50%',
+                border: scrolled ? '1px solid var(--border)' : '1px solid transparent',
+                background: scrolled ? 'rgba(255,255,255,0.03)' : 'transparent',
                 color: 'var(--text-primary)',
                 cursor: 'pointer',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -126,47 +166,40 @@ export default function Navbar() {
             transition={{ duration: 0.25 }}
             style={{
               position: 'fixed', inset: 0, zIndex: 99,
-              background: 'rgba(10,10,10,0.97)',
-              backdropFilter: 'blur(24px)',
+              background: 'rgba(5,5,7,1)',
               display: 'flex', flexDirection: 'column',
               alignItems: 'center', justifyContent: 'center', gap: 8,
             }}
           >
-            {navLinks.map(({ label, to }, i) => (
-              <motion.div
-                key={to}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.05 * i, duration: 0.3 }}
-              >
-                <NavLink
-                  to={to}
-                  onClick={() => setMobileOpen(false)}
-                  style={({ isActive }) => ({
-                    display: 'block',
-                    fontSize: '2rem',
-                    fontWeight: 700,
-                    color: isActive ? 'var(--accent)' : 'var(--text-primary)',
-                    textDecoration: 'none',
-                    padding: '12px 32px',
-                    textAlign: 'center',
-                    letterSpacing: '-0.02em',
-                  })}
-                >
-                  {label}
-                </NavLink>
-              </motion.div>
-            ))}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.25 }}
-              style={{ marginTop: 24 }}
-            >
+            {navLinks.map(({ label, to }, i) => {
+              const isActive = location.pathname.startsWith(to);
+              return (
+                <div key={to}>
+                  <Link
+                    to={to}
+                    onClick={() => setMobileOpen(false)}
+                    style={{
+                      display: 'block',
+                      fontSize: '2rem',
+                      fontWeight: 700,
+                      color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
+                      textDecoration: 'none',
+                      padding: '12px 32px',
+                      textAlign: 'center',
+                      letterSpacing: '-0.02em',
+                      transition: 'color 0.2s',
+                    }}
+                  >
+                    {label}
+                  </Link>
+                </div>
+              );
+            })}
+            <div style={{ marginTop: 24 }}>
               <Link to="/contact" className="btn-primary" onClick={() => setMobileOpen(false)}>
                 Let's Work <ArrowUpRight size={14} />
               </Link>
-            </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

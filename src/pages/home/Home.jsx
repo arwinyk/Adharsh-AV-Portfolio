@@ -2,16 +2,35 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { projects } from '../../data/projectsData';
 import {
-  ArrowRight, ArrowUpRight, LayoutGrid, Layers, Database,
-  ChevronDown, Check, Star, Monitor, Sparkles, Zap
+  ArrowRight, ArrowUpRight, LayoutGrid, Layers,
+  ChevronDown, Star, Monitor, Sparkles, Zap,
+  Mail, MessageSquare
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const premiumEasing = [0.16, 1, 0.3, 1];
+
 const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 28 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.65, delay, ease: [0.25, 1, 0.5, 1] },
+  initial: { opacity: 0, y: 32 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: '-80px' },
+  transition: { duration: 0.8, delay, ease: premiumEasing },
 });
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    }
+  }
+};
+
+const staggerItem = {
+  hidden: { opacity: 0, y: 32 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: premiumEasing } }
+};
 
 export default function Home() {
   const [activeFaq, setActiveFaq] = useState(null);
@@ -41,14 +60,10 @@ export default function Home() {
   ];
 
   const processSteps = [
-    { num: '01', name: 'Discover' },
-    { num: '02', name: 'Research' },
-    { num: '03', name: 'Define' },
-    { num: '04', name: 'Wireframe' },
-    { num: '05', name: 'Visual' },
-    { num: '06', name: 'Prototype' },
-    { num: '07', name: 'Test' },
-    { num: '08', name: 'Deliver' },
+    { num: '01', name: 'Discover', desc: 'Understanding your business goals, target audience, and market positioning.' },
+    { num: '02', name: 'Define', desc: 'Creating user flows, architecture, and establishing the core UX strategy.' },
+    { num: '03', name: 'Design', desc: 'Crafting high-fidelity, premium interfaces with meticulous attention to detail.' },
+    { num: '04', name: 'Deliver', desc: 'Comprehensive developer handoff with interactive prototypes and design systems.' },
   ];
 
   const testimonials = [
@@ -65,7 +80,7 @@ export default function Home() {
       initials: "MC",
     },
     {
-      quote: "Absolute professional. Transparent timelines and zero visual compromises. The Figma handoff was perfectly organized, making the implementation process incredibly smooth for the developers.",
+      quote: "Absolute professional. Transparent timelines and zero visual compromises. The Figma handoff was perfectly organized, making the implementation process incredibly smooth.",
       author: "Elena Rodriguez",
       role: "Lead Product Designer",
       initials: "ER",
@@ -86,10 +101,6 @@ export default function Home() {
       a: "All of my work is delivered via Figma. I structure my files meticulously with clean layers, auto-layout components, and clear developer handoff annotations to ensure the final coded product matches the design perfectly.",
     },
     {
-      q: "Do you take on international projects?",
-      a: "Yes! A majority of my client base is global. I structure asynchronous communication channels using Loom videos, Figma comments, and email, making timezone differences seamless.",
-    },
-    {
       q: "What does your typical project timeline look like?",
       a: "Small UX audits or visual refreshes usually take 1–2 weeks. Comprehensive mobile app or web platform designs typically range from 4–8 weeks, depending on the depth of research, wireframing, and interactive prototyping required.",
     },
@@ -101,166 +112,153 @@ export default function Home() {
     <div style={{ width: '100%', background: 'var(--bg-base)', position: 'relative' }}>
 
       {/* ══════════════════════════════════════════════
-          1. HERO
+          1. HERO (Apple x Awwwards Aesthetic)
       ══════════════════════════════════════════════ */}
       <section style={{
-        minHeight: 'calc(100vh - 80px)',
+        minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
         position: 'relative',
-        padding: '100px 24px 80px',
+        padding: '120px 24px 80px',
         textAlign: 'center',
         overflow: 'hidden',
       }}>
-        {/* Background glows */}
-        <div style={{
-          position: 'absolute', top: '15%', left: '50%', transform: 'translateX(-50%)',
-          width: 700, height: 400,
-          background: 'radial-gradient(ellipse, rgba(59,130,246,0.1) 0%, rgba(139,92,246,0.06) 50%, transparent 75%)',
-          filter: 'blur(40px)', pointerEvents: 'none', zIndex: 0,
-        }} />
-        <div className="animate-glow-pulse" style={{
-          position: 'absolute', top: '30%', left: '20%',
-          width: 300, height: 300,
-          background: 'radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%)',
-          borderRadius: '50%', filter: 'blur(60px)', pointerEvents: 'none', zIndex: 0,
-        }} />
-        <div className="animate-glow-pulse" style={{
-          position: 'absolute', top: '20%', right: '15%',
-          width: 250, height: 250,
-          background: 'radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%)',
-          borderRadius: '50%', filter: 'blur(60px)', pointerEvents: 'none', zIndex: 0,
-          animationDelay: '1.5s',
-        }} />
-
-        <div style={{ maxWidth: 900, margin: '0 auto', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24 }}>
-
+        <motion.div 
+          style={{ maxWidth: 1000, margin: '0 auto', zIndex: 1 }}
+          variants={staggerContainer}
+          initial="hidden"
+          animate="show"
+        >
           {/* Availability badge */}
-          <motion.div {...fadeUp(0)} style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            padding: '7px 18px', borderRadius: 'var(--radius-full)',
-            border: '1px solid rgba(34,197,94,0.2)',
-            background: 'rgba(34,197,94,0.05)',
-            backdropFilter: 'blur(10px)',
-          }}>
-            <span className="avail-dot" />
-            <span style={{
-              fontSize: '0.72rem', fontFamily: "'JetBrains Mono', monospace",
-              letterSpacing: '0.12em', textTransform: 'uppercase',
-              color: 'var(--success)', fontWeight: 600,
+          <motion.div variants={staggerItem} style={{ marginBottom: 32, display: 'flex', justifyContent: 'center' }}>
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: 10,
+              padding: '8px 20px', borderRadius: 'var(--radius-full)',
+              border: '1px solid rgba(255,255,255,0.06)',
+              background: 'rgba(255,255,255,0.02)',
+              backdropFilter: 'blur(12px)',
+              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05)',
             }}>
-              Available for Q2-Q3 2026
-            </span>
+              <span className="avail-dot" />
+              <span style={{
+                fontSize: '0.72rem', fontFamily: "'JetBrains Mono', monospace",
+                letterSpacing: '0.12em', textTransform: 'uppercase',
+                color: 'var(--text-secondary)', fontWeight: 600,
+              }}>
+                Available for Q2-Q3 2026
+              </span>
+            </div>
           </motion.div>
 
           <motion.h1
-            {...fadeUp(0.1)}
+            variants={staggerItem}
             style={{
               fontFamily: "'Sora', sans-serif",
-              fontSize: 'clamp(2.8rem, 7vw, 5.5rem)',
+              fontSize: 'clamp(3.5rem, 8vw, 7.5rem)',
               fontWeight: 800,
-              letterSpacing: '-0.04em',
+              letterSpacing: '-0.05em',
               lineHeight: 1.05,
               color: 'var(--text-primary)',
+              marginBottom: 24,
             }}
           >
             Adharsh AV<br />
-            <span style={{
-              background: 'linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}>
+            <span className="gradient-text">
               UI/UX Designer.
             </span>
           </motion.h1>
 
-          {/* Subhead */}
           <motion.p
-            {...fadeUp(0.2)}
+            variants={staggerItem}
             style={{
-              fontSize: 'clamp(1rem, 2vw, 1.15rem)',
+              fontSize: 'clamp(1.1rem, 2vw, 1.35rem)',
               color: 'var(--text-secondary)',
-              maxWidth: 580,
-              lineHeight: 1.75,
+              maxWidth: 640,
+              margin: '0 auto 48px',
+              lineHeight: 1.6,
               fontFamily: "'Geist', sans-serif",
             }}
           >
-            Designing intuitive digital experiences. I focus on crafting modern mobile & web interfaces, turning ideas into clean, user-centered experiences.
+            I craft digital experiences that are intuitive, immersive, and visually uncompromising. Turning complex problems into elegant interfaces.
           </motion.p>
 
-          {/* CTAs */}
-          <motion.div {...fadeUp(0.3)} style={{ display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center' }}>
-            <Link to="/projects" className="btn-primary" style={{ padding: '14px 32px', fontSize: '0.9rem' }}>
-              <span>See My Work</span> <ArrowRight size={16} />
-            </Link>
-            <Link to="/contact" className="btn-ghost" style={{ padding: '13px 28px', fontSize: '0.9rem' }}>
-              Let's Talk <Sparkles size={16} />
+          <motion.div variants={staggerItem} style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
+            <Link to="/projects" className="btn-primary" style={{ padding: '16px 36px', fontSize: '0.95rem' }}>
+              <span>View Selected Work</span> <ArrowRight size={16} />
             </Link>
           </motion.div>
-
-          {/* Tag cloud */}
-          <motion.div {...fadeUp(0.4)} style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 10, marginTop: 8 }}>
-            {['#UIDesign', '#UXResearch', '#MobileApps', '#WebDesign'].map(tag => (
-              <span key={tag} className="tag-chip">{tag}</span>
-            ))}
-          </motion.div>
-        </div>
+        </motion.div>
 
         {/* Scroll hint */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.2, duration: 0.6 }}
+          transition={{ delay: 1.5, duration: 1 }}
           className="animate-float"
           style={{
-            position: 'absolute', bottom: 32, left: '50%', transform: 'translateX(-50%)',
-            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, opacity: 0.45,
+            position: 'absolute', bottom: 40, left: '50%', transform: 'translateX(-50%)',
+            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, opacity: 0.5,
           }}
         >
-          <span style={{
-            fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.15em',
-            fontFamily: "'JetBrains Mono', monospace", color: 'var(--text-tertiary)',
-          }}>Scroll</span>
-          <ChevronDown size={13} color="var(--text-tertiary)" />
+          <div style={{ width: 1, height: 40, background: 'linear-gradient(to bottom, var(--text-tertiary), transparent)' }} />
         </motion.div>
       </section>
 
-      <div className="divider" />
-
       {/* ══════════════════════════════════════════════
-          2. MARQUEE
+          2. MARQUEE (Dual Direction)
       ══════════════════════════════════════════════ */}
       <section style={{
-        padding: '32px 0',
-        background: 'var(--bg-secondary)',
+        padding: '40px 0',
+        background: 'rgba(255,255,255,0.01)',
+        borderTop: '1px solid var(--border)',
+        borderBottom: '1px solid var(--border)',
         overflow: 'hidden',
         position: 'relative',
       }}>
         <div style={{
-          position: 'absolute', top: 0, bottom: 0, left: 0, width: 120,
-          background: 'linear-gradient(to right, var(--bg-secondary), transparent)',
+          position: 'absolute', top: 0, bottom: 0, left: 0, width: 150,
+          background: 'linear-gradient(to right, var(--bg-base), transparent)',
           zIndex: 10, pointerEvents: 'none',
         }} />
         <div style={{
-          position: 'absolute', top: 0, bottom: 0, right: 0, width: 120,
-          background: 'linear-gradient(to left, var(--bg-secondary), transparent)',
+          position: 'absolute', top: 0, bottom: 0, right: 0, width: 150,
+          background: 'linear-gradient(to left, var(--bg-base), transparent)',
           zIndex: 10, pointerEvents: 'none',
         }} />
-        <div className="animate-marquee" style={{ display: 'flex', width: '200%', gap: 48, alignItems: 'center' }}>
+        
+        {/* Row 1 - Left */}
+        <div className="animate-marquee" style={{ display: 'flex', width: '200%', gap: 64, alignItems: 'center', marginBottom: 24 }}>
           {[...Array(2)].map((_, di) => (
-            <div key={di} style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', width: '50%', gap: 48 }}>
-              {['Figma', 'Framer', 'Principle', 'Linear', 'Lottie', 'FigJam', 'Zeroheight', 'Notion', 'After Effects'].map((tool, i) => (
+            <div key={di} style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', width: '50%', gap: 64 }}>
+              {['Figma', 'Framer', 'Principle', 'Linear', 'Lottie', 'FigJam', 'Zeroheight'].map((tool, i) => (
                 <span key={tool + i + di} style={{
                   fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase',
-                  letterSpacing: '0.12em', color: 'var(--text-tertiary)', opacity: 0.4,
-                  display: 'flex', alignItems: 'center', gap: 8, whiteSpace: 'nowrap',
+                  fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase',
+                  letterSpacing: '0.15em', color: 'var(--text-tertiary)', opacity: 0.6,
+                  display: 'flex', alignItems: 'center', gap: 10, whiteSpace: 'nowrap',
                 }}>
-                  <Check size={12} color="var(--accent)" style={{ opacity: 0.8 }} />
+                  <Sparkles size={14} color="var(--accent)" style={{ opacity: 0.6 }} />
                   {tool}
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+
+        {/* Row 2 - Right */}
+        <div className="animate-marquee" style={{ display: 'flex', width: '200%', gap: 64, alignItems: 'center', animationDirection: 'reverse' }}>
+          {[...Array(2)].map((_, di) => (
+            <div key={di} style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', width: '50%', gap: 64 }}>
+              {['UI Design', 'UX Research', 'Prototyping', 'Design Systems', 'Interaction Design', 'Web Design', 'Mobile Apps'].map((skill, i) => (
+                <span key={skill + i + di} style={{
+                  fontFamily: "'Sora', sans-serif",
+                  fontSize: '1.1rem', fontWeight: 700,
+                  letterSpacing: '-0.02em', color: 'var(--text-tertiary)', opacity: 0.3,
+                  whiteSpace: 'nowrap',
+                }}>
+                  {skill}
                 </span>
               ))}
             </div>
@@ -268,204 +266,97 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="divider" />
-
       {/* ══════════════════════════════════════════════
-          3. SERVICES BENTO
+          3. FEATURED WORK (Immersive Cards)
       ══════════════════════════════════════════════ */}
       <section className="section-pad container-xl">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6 }}
-        >
-          <span className="section-label">Core Capabilities</span>
-          <h2 style={{
-            fontFamily: "'Sora', sans-serif",
-            fontSize: 'clamp(1.8rem, 4vw, 3.2rem)',
-            fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 48,
-            lineHeight: 1.15,
-          }}>
-            Specialised services focused <br />
-            <span className="gradient-text">on interface craftsmanship.</span>
-          </h2>
-        </motion.div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 20 }}>
-          {services.map((svc, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.5, delay: idx * 0.08 }}
-              className="glass-card glow-border-hover card-animated-border"
-              style={{ padding: 32, display: 'flex', flexDirection: 'column', gap: 16, position: 'relative' }}
-            >
-              {/* Icon */}
-              <div style={{
-                width: 48, height: 48, borderRadius: 'var(--radius-md)',
-                background: 'rgba(59,130,246,0.1)',
-                border: '1px solid rgba(59,130,246,0.2)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: 'var(--accent)',
-              }}>
-                {svc.icon}
-              </div>
-              <h3 style={{
-                fontFamily: "'Sora', sans-serif", fontSize: '1.1rem',
-                fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em',
-              }}>{svc.title}</h3>
-              <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.75 }}>
-                {svc.desc}
-              </p>
-              <Link
-                to="/services"
-                style={{
-                  fontSize: '0.78rem', fontWeight: 600, color: 'var(--accent)',
-                  textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4,
-                  marginTop: 'auto', paddingTop: 12,
-                  transition: 'gap 0.2s',
-                }}
-              >
-                View Deliverables <ArrowRight size={12} />
-              </Link>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      <div className="divider" />
-
-      {/* ══════════════════════════════════════════════
-          4. FEATURED WORK
-      ══════════════════════════════════════════════ */}
-      <section className="section-pad container-xl">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6 }}
-          style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', gap: 16, marginBottom: 48 }}
-        >
+        <motion.div {...fadeUp(0)} style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', gap: 16, marginBottom: 64 }}>
           <div>
             <span className="section-label">Selected Work</span>
             <h2 style={{
               fontFamily: "'Sora', sans-serif",
-              fontSize: 'clamp(1.8rem, 4vw, 3.2rem)',
-              fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.15,
+              fontSize: 'clamp(2rem, 4vw, 3.5rem)',
+              fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.1,
             }}>
-              Crafting premium digital products.
+              Crafting premium<br />
+              <span className="gradient-text">digital products.</span>
             </h2>
           </div>
-          <Link to="/projects" className="btn-ghost">
-            View All Projects <ArrowUpRight size={15} />
+          <Link to="/projects" className="btn-ghost" style={{ padding: '14px 28px' }}>
+            View Archive <ArrowUpRight size={15} />
           </Link>
         </motion.div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: 24 }}>
-          {featuredProjects.slice(0, 2).map((proj, idx) => (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: 32 }}>
+          {featuredProjects.map((proj, idx) => (
             <motion.div
               key={idx}
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.55, delay: idx * 0.1 }}
+              {...fadeUp(idx * 0.1)}
+              style={{ position: 'relative' }}
+              className="group"
             >
               <Link to={`/projects/${proj.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
                 <div
-                  className="glass-card card-animated-border"
-                  style={{ padding: 20, display: 'flex', flexDirection: 'column', height: '100%', cursor: 'pointer' }}
+                  className="glass-card"
+                  style={{ 
+                    padding: 8, display: 'flex', flexDirection: 'column', 
+                    cursor: 'pointer', overflow: 'hidden',
+                  }}
                 >
-                  {/* Thumbnail */}
+                  {/* Thumbnail Image */}
                   <div style={{
-                    aspectRatio: '16/9', borderRadius: 'var(--radius-lg)',
-                    overflow: 'hidden', position: 'relative', marginBottom: 20,
+                    aspectRatio: '16/10', borderRadius: 'var(--radius-lg)',
+                    overflow: 'hidden', position: 'relative',
                     background: 'var(--bg-tertiary)',
                   }}>
-                    {proj.coverImage ? (
-                      <>
-                        <img
-                          src={proj.coverImage}
-                          alt={proj.title}
-                          style={{
-                            position: 'absolute', inset: 0, width: '100%', height: '100%',
-                            objectFit: 'cover', objectPosition: 'top',
-                            transition: 'transform 0.6s ease',
-                          }}
-                          onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
-                          onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
-                        />
-                        <div style={{
-                          position: 'absolute', inset: 0,
-                          background: 'linear-gradient(to top, rgba(0,0,0,0.45), transparent)',
-                          opacity: 0, transition: 'opacity 0.3s',
-                        }} />
-                      </>
-                    ) : (
-                      <>
-                        <div style={{
-                          position: 'absolute', inset: 0,
-                          background: 'linear-gradient(135deg, var(--bg-tertiary), var(--bg-base))',
-                        }} />
-                        <div style={{
-                          position: 'absolute', top: '25%', right: '10%',
-                          width: 200, height: 200,
-                          background: 'radial-gradient(circle, rgba(59,130,246,0.2) 0%, rgba(139,92,246,0.15) 100%)',
-                          borderRadius: '50%', filter: 'blur(40px)',
-                        }} />
-                        <div style={{
-                          position: 'absolute', inset: 0,
-                          display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        }}>
-                          <div className="glass-card-2" style={{ width: '75%', padding: 20, borderRadius: 'var(--radius-lg)' }}>
-                            <div style={{ display: 'flex', gap: 6, marginBottom: 12 }}>
-                              <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'rgba(239,68,68,0.6)' }} />
-                              <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'rgba(234,179,8,0.6)' }} />
-                              <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'rgba(34,197,94,0.6)' }} />
-                            </div>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                              <div style={{ height: 28, borderRadius: 6, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', paddingLeft: 10, gap: 6 }}>
-                                <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)' }} />
-                                <div style={{ width: 48, height: 6, borderRadius: 3, background: 'rgba(255,255,255,0.1)' }} />
-                              </div>
-                              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 8 }}>
-                                <div style={{ height: 36, borderRadius: 6, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }} />
-                                <div style={{ height: 36, borderRadius: 6, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }} />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </>
+                    {proj.coverImage && (
+                      <motion.img
+                        src={proj.coverImage}
+                        alt={proj.title}
+                        style={{
+                          width: '100%', height: '100%',
+                          objectFit: 'cover', objectPosition: 'top',
+                        }}
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ duration: 0.6, ease: premiumEasing }}
+                      />
                     )}
-                  </div>
-
-                  <span className="mono-tag" style={{ marginBottom: 8 }}>{proj.category}</span>
-                  <h3 style={{
-                    fontFamily: "'Sora', sans-serif",
-                    fontSize: '1.25rem', fontWeight: 700, letterSpacing: '-0.02em',
-                    color: 'var(--text-primary)', marginBottom: 8,
-                    transition: 'color 0.2s',
-                  }}>{proj.title}</h3>
-                  <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: 16 }}>
-                    {proj.shortDescription}
-                  </p>
-
-                  {/* Metrics */}
-                  <div style={{
-                    display: 'flex', alignItems: 'center', gap: 20,
-                    marginTop: 'auto', paddingTop: 16,
-                    borderTop: '1px solid var(--border)',
-                  }}>
-                    {proj.metrics.slice(0, 2).map((m, mi) => (
-                      <div key={mi}>
-                        <span style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)', textTransform: 'uppercase', fontFamily: "'JetBrains Mono', monospace", letterSpacing: '0.08em', display: 'block' }}>{m.label}</span>
-                        <span style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-primary)', fontFamily: "'Sora', sans-serif" }}>{m.value}</span>
+                    {/* Hover Overlay */}
+                    <div style={{
+                      position: 'absolute', inset: 0,
+                      background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%)',
+                      opacity: 0, transition: 'opacity 0.4s ease',
+                      display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
+                      padding: 32,
+                    }} className="opacity-0 group-hover:opacity-100">
+                      <div style={{
+                        transform: 'translateY(20px)', transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                      }} className="group-hover:translate-y-0">
+                        <span className="mono-tag" style={{ marginBottom: 12 }}>{proj.category}</span>
+                        <h3 style={{
+                          fontFamily: "'Sora', sans-serif", fontSize: '1.75rem', fontWeight: 800,
+                          color: '#fff', letterSpacing: '-0.03em', marginBottom: 8,
+                        }}>{proj.title}</h3>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--accent)' }}>
+                          <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Explore Case Study</span>
+                          <ArrowRight size={16} />
+                        </div>
                       </div>
-                    ))}
-                    <div style={{ marginLeft: 'auto', color: 'var(--text-tertiary)', transition: 'color 0.2s, transform 0.2s' }}>
-                      <ArrowRight size={18} />
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Meta details outside the image for default state */}
+                <div style={{ padding: '24px 8px 8px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <div>
+                      <h3 style={{
+                        fontFamily: "'Sora', sans-serif", fontSize: '1.35rem', fontWeight: 700,
+                        color: 'var(--text-primary)', letterSpacing: '-0.02em', marginBottom: 8,
+                      }}>{proj.title}</h3>
+                      <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)' }}>
+                        {proj.shortDescription}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -478,64 +369,100 @@ export default function Home() {
       <div className="divider" />
 
       {/* ══════════════════════════════════════════════
-          5. PROCESS PREVIEW
+          4. SERVICES BENTO
       ══════════════════════════════════════════════ */}
-      <section className="section-pad" style={{ background: 'var(--bg-secondary)', overflow: 'hidden' }}>
+      <section className="section-pad container-xl">
+        <motion.div {...fadeUp(0)}>
+          <span className="section-label">Core Capabilities</span>
+          <h2 style={{
+            fontFamily: "'Sora', sans-serif",
+            fontSize: 'clamp(2rem, 4vw, 3.5rem)',
+            fontWeight: 800, letterSpacing: '-0.04em', marginBottom: 64,
+            lineHeight: 1.1,
+          }}>
+            Specialised services focused <br />
+            <span className="gradient-text">on interface craftsmanship.</span>
+          </h2>
+        </motion.div>
+
+        <div className="bento-grid">
+          {services.map((svc, idx) => (
+            <motion.div
+              key={idx}
+              {...fadeUp(idx * 0.1)}
+              className="glass-card glow-border-hover"
+              style={{ 
+                gridColumn: idx === 0 || idx === 3 ? 'span 7' : 'span 5',
+                padding: '40px 32px', display: 'flex', flexDirection: 'column', gap: 20,
+              }}
+            >
+              <div style={{
+                width: 56, height: 56, borderRadius: 'var(--radius-md)',
+                background: 'rgba(255,255,255,0.03)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: 'var(--text-primary)',
+              }}>
+                {svc.icon}
+              </div>
+              <h3 style={{
+                fontFamily: "'Sora', sans-serif", fontSize: '1.3rem',
+                fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em',
+              }}>{svc.title}</h3>
+              <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: 1.7 }}>
+                {svc.desc}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      <div className="divider" />
+
+      {/* ══════════════════════════════════════════════
+          5. PROCESS / WORKFLOW (Vertical)
+      ══════════════════════════════════════════════ */}
+      <section className="section-pad" style={{ background: 'var(--bg-secondary)', position: 'relative' }}>
         <div className="container-xl">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.6 }}
-          >
+          <motion.div {...fadeUp(0)} style={{ marginBottom: 64 }}>
             <span className="section-label">Design Workflow</span>
             <h2 style={{
               fontFamily: "'Sora', sans-serif",
-              fontSize: 'clamp(1.8rem, 4vw, 3.2rem)',
-              fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.15, marginBottom: 40,
+              fontSize: 'clamp(2rem, 4vw, 3.5rem)',
+              fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.1,
             }}>
-              A meticulous 8-step process<br />
-              <span className="gradient-text">for crafting experiences.</span>
+              A meticulous methodology<br />
+              <span className="gradient-text">for consistent results.</span>
             </h2>
           </motion.div>
 
-          <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 16, scrollbarWidth: 'none' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 32 }}>
             {processSteps.map((step, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: idx * 0.06 }}
-                className="glass-card"
+                {...fadeUp(idx * 0.1)}
                 style={{
-                  flexShrink: 0,
-                  width: 130,
-                  padding: '24px 20px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  gap: 20,
-                  cursor: 'default',
-                  borderRadius: 'var(--radius-xl)',
+                  position: 'relative',
+                  paddingLeft: 24,
+                  borderLeft: '1px solid var(--border)',
                 }}
               >
                 <span style={{
                   fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: '0.65rem', color: 'var(--accent)', fontWeight: 700, letterSpacing: '0.1em',
+                  fontSize: '0.85rem', color: 'var(--text-tertiary)', fontWeight: 600, letterSpacing: '0.1em',
+                  display: 'block', marginBottom: 16,
                 }}>{step.num}</span>
-                <span style={{
+                <h3 style={{
                   fontFamily: "'Sora', sans-serif",
-                  fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em',
-                }}>{step.name}</span>
+                  fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.03em',
+                  marginBottom: 12,
+                }}>{step.name}</h3>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6 }}>
+                  {step.desc}
+                </p>
               </motion.div>
             ))}
-          </div>
-
-          <div style={{ marginTop: 32, display: 'flex', justifyContent: 'flex-end' }}>
-            <Link to="/process" className="btn-ghost">
-              Explore Process Details <ArrowRight size={15} />
-            </Link>
           </div>
         </div>
       </section>
@@ -543,73 +470,52 @@ export default function Home() {
       <div className="divider" />
 
       {/* ══════════════════════════════════════════════
-          6. TESTIMONIALS
+          6. TESTIMONIALS (Masonry/Grid style)
       ══════════════════════════════════════════════ */}
       <section className="section-pad container-xl">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6 }}
-        >
-          <span className="section-label">Client Feedback</span>
+        <motion.div {...fadeUp(0)} style={{ textAlign: 'center', marginBottom: 64, maxWidth: 600, margin: '0 auto 64px' }}>
+          <span className="section-label" style={{ justifyContent: 'center' }}>Client Feedback</span>
           <h2 style={{
             fontFamily: "'Sora', sans-serif",
-            fontSize: 'clamp(1.8rem, 4vw, 3.2rem)',
-            fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.15, marginBottom: 48,
+            fontSize: 'clamp(2rem, 4vw, 3.5rem)',
+            fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.1,
           }}>
-            What teams say about <br />
-            <span className="gradient-text">my design craftsmanship.</span>
+            Trusted by teams <span className="gradient-text">globally.</span>
           </h2>
         </motion.div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 24 }}>
           {testimonials.map((t, idx) => (
             <motion.div
               key={idx}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
+              {...fadeUp(idx * 0.1)}
               className="glass-card"
-              style={{ padding: 32, display: 'flex', flexDirection: 'column', gap: 20, position: 'relative' }}
+              style={{ padding: 40, display: 'flex', flexDirection: 'column', gap: 24 }}
             >
-              {/* Quote mark decoration */}
-              <div style={{
-                position: 'absolute', top: 20, right: 24,
-                fontSize: '5rem', lineHeight: 1, fontFamily: "'Sora', sans-serif",
-                color: 'rgba(59,130,246,0.06)', fontWeight: 800, userSelect: 'none',
-              }}>"</div>
-
-              <div style={{ display: 'flex', gap: 3 }}>
+              <div style={{ display: 'flex', gap: 4 }}>
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={14} fill="#F59E0B" color="#F59E0B" />
+                  <Star key={i} size={16} fill="var(--text-primary)" color="var(--text-primary)" />
                 ))}
               </div>
 
               <p style={{
-                fontSize: '0.875rem', fontStyle: 'italic',
-                color: 'var(--text-secondary)', lineHeight: 1.8, position: 'relative', zIndex: 1,
+                fontSize: '1rem', color: 'var(--text-primary)', lineHeight: 1.7, fontWeight: 500,
               }}>
                 "{t.quote}"
               </p>
 
-              <div style={{
-                display: 'flex', alignItems: 'center', gap: 12,
-                paddingTop: 16, borderTop: '1px solid var(--border)', marginTop: 'auto',
-              }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 'auto', paddingTop: 24, borderTop: '1px solid var(--border)' }}>
                 <div style={{
-                  width: 40, height: 40, borderRadius: 'var(--radius-full)',
-                  background: 'linear-gradient(135deg, rgba(59,130,246,0.2), rgba(139,92,246,0.2))',
-                  border: '1px solid rgba(59,130,246,0.3)',
+                  width: 48, height: 48, borderRadius: 'var(--radius-full)',
+                  background: 'var(--bg-tertiary)', border: '1px solid var(--border)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontFamily: "'Sora', sans-serif", fontWeight: 800, fontSize: '0.8rem', color: 'var(--accent)',
+                  fontFamily: "'Sora', sans-serif", fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-secondary)',
                 }}>
                   {t.initials}
                 </div>
                 <div>
-                  <div style={{ fontFamily: "'Sora', sans-serif", fontWeight: 700, fontSize: '0.875rem', color: 'var(--text-primary)' }}>{t.author}</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>{t.role}</div>
+                  <div style={{ fontFamily: "'Sora', sans-serif", fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-primary)' }}>{t.author}</div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{t.role}</div>
                 </div>
               </div>
             </motion.div>
@@ -622,21 +528,15 @@ export default function Home() {
       {/* ══════════════════════════════════════════════
           7. FAQ
       ══════════════════════════════════════════════ */}
-      <section className="section-pad container-xl" style={{ maxWidth: 820, margin: '0 auto' }}>
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6 }}
-          style={{ textAlign: 'center', marginBottom: 48 }}
-        >
+      <section className="section-pad container-xl" style={{ maxWidth: 840, margin: '0 auto' }}>
+        <motion.div {...fadeUp(0)} style={{ textAlign: 'center', marginBottom: 64 }}>
           <span className="section-label">Pre-Qualification FAQ</span>
           <h2 style={{
             fontFamily: "'Sora', sans-serif",
-            fontSize: 'clamp(1.8rem, 4vw, 3rem)',
-            fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.15,
+            fontSize: 'clamp(2rem, 4vw, 3rem)',
+            fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.1,
           }}>
-            Answering common client concerns.
+            Answering common concerns.
           </h2>
         </motion.div>
 
@@ -644,82 +544,68 @@ export default function Home() {
           {faqs.map((faq, idx) => (
             <div key={idx} className="faq-item">
               <button className="faq-question" onClick={() => toggleFaq(idx)}>
-                <span>{faq.q}</span>
-                <motion.div animate={{ rotate: activeFaq === idx ? 180 : 0 }} transition={{ duration: 0.25 }}>
-                  <ChevronDown size={17} />
+                <span style={{ fontSize: '1.1rem' }}>{faq.q}</span>
+                <motion.div animate={{ rotate: activeFaq === idx ? 180 : 0 }} transition={{ duration: 0.3, ease: premiumEasing }}>
+                  <ChevronDown size={20} />
                 </motion.div>
               </button>
-              <motion.div
-                initial={false}
-                animate={{ height: activeFaq === idx ? 'auto' : 0, opacity: activeFaq === idx ? 1 : 0 }}
-                transition={{ duration: 0.35, ease: 'easeInOut' }}
-                style={{ overflow: 'hidden' }}
-              >
-                <div className="faq-answer" style={{ paddingBottom: 20 }}>
-                  {faq.a}
-                </div>
-              </motion.div>
+              <AnimatePresence>
+                {activeFaq === idx && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.4, ease: premiumEasing }}
+                    style={{ overflow: 'hidden' }}
+                  >
+                    <div className="faq-answer" style={{ paddingBottom: 24, paddingTop: 8, fontSize: '1rem' }}>
+                      {faq.a}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           ))}
         </div>
       </section>
 
-      <div className="divider" />
-
       {/* ══════════════════════════════════════════════
-          8. CONTACT CTA BLOCK
+          8. IMMERSIVE CONTACT CTA
       ══════════════════════════════════════════════ */}
-      <section className="section-pad container-xl">
+      <section className="section-pad container-xl" style={{ paddingBottom: 120 }}>
         <motion.div
-          initial={{ opacity: 0, y: 28 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.65 }}
-          className="glass-card card-animated-border"
+          {...fadeUp(0)}
+          className="glass-card"
           style={{
-            padding: 'clamp(40px, 6vw, 80px)',
-            background: 'linear-gradient(135deg, rgba(11,11,15,0.8), rgba(16,17,22,0.9))',
+            padding: 'clamp(64px, 10vw, 100px) clamp(32px, 8vw, 80px)',
+            background: 'rgba(22, 23, 29, 0.95)',
             borderRadius: 'var(--radius-2xl)',
-            display: 'flex', flexWrap: 'wrap',
-            alignItems: 'center', justifyContent: 'space-between',
-            gap: 40, position: 'relative', overflow: 'hidden',
+            position: 'relative', overflow: 'hidden',
+            textAlign: 'center',
           }}
         >
-          {/* Decorative glow */}
-          <div className="animate-glow-pulse" style={{
-            position: 'absolute', top: '50%', right: '5%', transform: 'translateY(-50%)',
-            width: 320, height: 320,
-            background: 'radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%)',
-            borderRadius: '50%', filter: 'blur(40px)', pointerEvents: 'none',
-          }} />
-          <div style={{
-            position: 'absolute', top: '30%', right: '25%',
-            width: 200, height: 200,
-            background: 'radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%)',
-            borderRadius: '50%', filter: 'blur(30px)', pointerEvents: 'none',
-          }} />
-
-          <div style={{ maxWidth: 520, zIndex: 1 }}>
+          <div style={{ position: 'relative', zIndex: 1, maxWidth: 700, margin: '0 auto' }}>
+            <span className="section-label" style={{ justifyContent: 'center' }}>Let's collaborate</span>
             <h2 style={{
               fontFamily: "'Sora', sans-serif",
-              fontSize: 'clamp(1.8rem, 4vw, 3rem)',
-              fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.15, marginBottom: 16,
+              fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
+              fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.05, marginBottom: 24,
             }}>
-              Have a UI/UX <br />
-              <span className="gradient-text">project in mind?</span>
+              Have a project<br />
+              <span className="gradient-text">in mind?</span>
             </h2>
-            <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: 1.75 }}>
-              Let's evaluate whether we are a good fit. I review and respond to all qualified freelance enquiries within 24 hours.
+            <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: 48 }}>
+              I am currently available for freelance opportunities. Let's discuss your project requirements and see if we're a good fit.
             </p>
-          </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, zIndex: 1 }}>
-            <Link to="/contact" className="btn-primary" style={{ padding: '14px 36px', fontSize: '0.9rem' }}>
-              Start a Conversation
-            </Link>
-            <a href="mailto:hello@adharsh.design" className="btn-ghost" style={{ textAlign: 'center', justifyContent: 'center' }}>
-              hello@adharsh.design
-            </a>
+            <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
+              <Link to="/contact" className="btn-primary" style={{ padding: '16px 36px', fontSize: '1rem' }}>
+                Start a Conversation <MessageSquare size={18} />
+              </Link>
+              <a href="mailto:hello@adharsh.design" className="btn-ghost" style={{ padding: '16px 36px', fontSize: '1rem' }}>
+                Email Me directly <Mail size={18} />
+              </a>
+            </div>
           </div>
         </motion.div>
       </section>
