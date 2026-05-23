@@ -4,15 +4,81 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Primary Meta Tags -->
     <title>Adharsh AV — UI/UX Designer</title>
     <meta name="description" content="UI/UX Designer crafting premium digital experiences and intuitive interfaces." />
-    <!-- Sora + Geist + JetBrains Mono -->
+    <meta name="author" content="Adharsh AV" />
+    <link rel="canonical" href="https://adharsh.design/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://adharsh.design/" />
+    <meta property="og:title" content="Adharsh AV — UI/UX Designer" />
+    <meta property="og:description" content="I engineer clarity out of complex interfaces. I partner with ambitious founders to untangle data-heavy SaaS dashboards and architect high-converting funnels." />
+    <meta property="og:image" content="https://adharsh.design/og-image.jpg" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://adharsh.design/" />
+    <meta property="twitter:title" content="Adharsh AV — UI/UX Designer" />
+    <meta property="twitter:description" content="I engineer clarity out of complex interfaces. I partner with ambitious founders to untangle data-heavy SaaS dashboards and architect high-converting funnels." />
+    <meta property="twitter:image" content="https://adharsh.design/og-image.jpg" />
+
+    <!-- Fonts: Sora + Geist + JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Sora:wght@400;600;700;800&display=swap">
+    <link rel="preload" as="image" href="/projects/smell-food-mobile/Screenshot 2026-05-20 011704.webp">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Sora:wght@400;600;700;800&display=swap" media="print" onload="this.media='all'">
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" />
+    </noscript>
+
+    <!-- Critical CSS & FOUC Prevention -->
+    <style>
+      :root {
+        --bg-base: #050507;
+        --bg-secondary: #0A0A0C;
+        --text-primary: #FAFAFA;
+        --text-secondary: #A1A1AA;
+        --accent: #3B82F6;
+        --accent2: #8B5CF6;
+      }
+      body {
+        background-color: var(--bg-base);
+        color: var(--text-primary);
+        margin: 0;
+        font-family: 'Geist', 'Inter', system-ui, sans-serif;
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Static SEO Fallback Content (hidden visually, visible to crawlers) -->
+      <div aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap;">
+        <header>
+          <h1>Adharsh AV</h1>
+          <h2>UI/UX Designer</h2>
+          <p>
+            I engineer clarity out of complex interfaces. I partner with ambitious founders to untangle data-heavy SaaS dashboards, architect high-converting funnels, and build premium digital products that refuse to be ignored.
+          </p>
+        </header>
+        <main>
+          <section>
+            <h3>Selected Work</h3>
+            <article>
+              <h4>Smell Food — Food Discovery &amp; Ordering</h4>
+              <p>A modern food discovery and ordering experience designed for users who want faster, cleaner, and more visually engaging food browsing.</p>
+            </article>
+            <article>
+              <h4>T Expo — Travel Discovery Platform</h4>
+              <p>A community-powered travel discovery platform designed to help tourists explore destinations across India with confidence.</p>
+            </article>
+          </section>
+        </main>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

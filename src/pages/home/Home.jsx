@@ -6,15 +6,16 @@ import {
   ChevronDown, Star, Monitor, Sparkles, Zap,
   Mail, MessageSquare
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } from 'framer-motion';
+import Magnetic from '../../components/Magnetic';
 
 const premiumEasing = [0.16, 1, 0.3, 1];
 
-const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 32 },
+const fadeUp = (delay = 0, prefersReducedMotion = false) => ({
+  initial: { opacity: 0, y: prefersReducedMotion ? 0 : 32 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, margin: '-80px' },
-  transition: { duration: 0.8, delay, ease: premiumEasing },
+  transition: { duration: prefersReducedMotion ? 0 : 0.4, delay: prefersReducedMotion ? 0 : delay, ease: premiumEasing },
 });
 
 const staggerContainer = {
@@ -22,17 +23,21 @@ const staggerContainer = {
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
+      staggerChildren: 0.08,
     }
   }
 };
 
 const staggerItem = {
   hidden: { opacity: 0, y: 32 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: premiumEasing } }
+  show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: premiumEasing } }
 };
 
 export default function Home() {
+  const prefersReducedMotion = useReducedMotion();
+  const { scrollY } = useScroll();
+  const parallaxY = useTransform(scrollY, [0, 1000], [0, prefersReducedMotion ? 0 : 250]);
+
   const [activeFaq, setActiveFaq] = useState(null);
   const featuredProjects = projects.filter(p => p.featured);
 
@@ -126,7 +131,7 @@ export default function Home() {
         overflow: 'hidden',
       }}>
         <motion.div 
-          style={{ maxWidth: 1000, margin: '0 auto', zIndex: 1 }}
+          style={{ maxWidth: 1000, margin: '0 auto', zIndex: 1, y: parallaxY }}
           variants={staggerContainer}
           initial="hidden"
           animate="show"
@@ -156,7 +161,7 @@ export default function Home() {
             variants={staggerItem}
             style={{
               fontFamily: "'Sora', sans-serif",
-              fontSize: 'clamp(3.5rem, 8vw, 7.5rem)',
+              fontSize: 'clamp(2.5rem, 5.5vw, 5rem)',
               fontWeight: 800,
               letterSpacing: '-0.05em',
               lineHeight: 1.05,
@@ -164,9 +169,9 @@ export default function Home() {
               marginBottom: 24,
             }}
           >
-            Adharsh AV<br />
+            I engineer clarity out of<br />
             <span className="gradient-text">
-              UI/UX Designer.
+              complex interfaces.
             </span>
           </motion.h1>
 
@@ -178,16 +183,17 @@ export default function Home() {
               maxWidth: 640,
               margin: '0 auto 48px',
               lineHeight: 1.6,
-              fontFamily: "'Geist', sans-serif",
             }}
           >
-            I craft digital experiences that are intuitive, immersive, and visually uncompromising. Turning complex problems into elegant interfaces.
+            I partner with ambitious founders to untangle data-heavy SaaS dashboards, architect high-converting funnels, and build premium digital products that refuse to be ignored.
           </motion.p>
 
           <motion.div variants={staggerItem} style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
-            <Link to="/projects" className="btn-primary" style={{ padding: '16px 36px', fontSize: '0.95rem' }}>
-              <span>View Selected Work</span> <ArrowRight size={16} />
-            </Link>
+            <Magnetic>
+              <Link to="/projects" className="btn-primary" style={{ padding: '16px 36px', fontSize: '0.95rem' }}>
+                <span>View Selected Work</span> <ArrowRight size={16} />
+              </Link>
+            </Magnetic>
           </motion.div>
         </motion.div>
 
@@ -313,6 +319,7 @@ export default function Home() {
                       <motion.img
                         src={proj.coverImage}
                         alt={proj.title}
+                        loading="lazy"
                         style={{
                           width: '100%', height: '100%',
                           objectFit: 'cover', objectPosition: 'top',
@@ -543,7 +550,7 @@ export default function Home() {
         <div>
           {faqs.map((faq, idx) => (
             <div key={idx} className="faq-item">
-              <button className="faq-question" onClick={() => toggleFaq(idx)}>
+              <button className="faq-question" onClick={() => toggleFaq(idx)} aria-expanded={activeFaq === idx} aria-controls={`faq-content-${idx}`}>
                 <span style={{ fontSize: '1.1rem' }}>{faq.q}</span>
                 <motion.div animate={{ rotate: activeFaq === idx ? 180 : 0 }} transition={{ duration: 0.3, ease: premiumEasing }}>
                   <ChevronDown size={20} />
@@ -558,7 +565,7 @@ export default function Home() {
                     transition={{ duration: 0.4, ease: premiumEasing }}
                     style={{ overflow: 'hidden' }}
                   >
-                    <div className="faq-answer" style={{ paddingBottom: 24, paddingTop: 8, fontSize: '1rem' }}>
+                    <div id={`faq-content-${idx}`} className="faq-answer" style={{ paddingBottom: 24, paddingTop: 8, fontSize: '1rem' }}>
                       {faq.a}
                     </div>
                   </motion.div>
@@ -599,12 +606,16 @@ export default function Home() {
             </p>
 
             <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
-              <Link to="/contact" className="btn-primary" style={{ padding: '16px 36px', fontSize: '1rem' }}>
-                Start a Conversation <MessageSquare size={18} />
-              </Link>
-              <a href="mailto:hello@adharsh.design" className="btn-ghost" style={{ padding: '16px 36px', fontSize: '1rem' }}>
-                Email Me directly <Mail size={18} />
-              </a>
+              <Magnetic>
+                <Link to="/contact" className="btn-primary" style={{ padding: '16px 36px', fontSize: '1rem' }}>
+                  Start a Conversation <MessageSquare size={18} />
+                </Link>
+              </Magnetic>
+              <Magnetic>
+                <a href="mailto:hello@adharsh.design" className="btn-ghost" style={{ padding: '16px 36px', fontSize: '1rem' }}>
+                  Email Me directly <Mail size={18} />
+                </a>
+              </Magnetic>
             </div>
           </div>
         </motion.div>

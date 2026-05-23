@@ -3,6 +3,7 @@ import { NavLink, Link, useLocation } from 'react-router-dom';
 import { Moon, Sun, Menu, X, ArrowUpRight } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import Magnetic from './Magnetic';
 
 const navLinks = [
   { label: 'Work', to: '/projects' },
@@ -131,10 +132,15 @@ export default function Navbar() {
             >
               {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
             </button>
-
-            <Link to="/contact" className="btn-primary hidden-mobile" style={{ padding: '10px 24px', fontSize: '0.85rem' }}>
-              Let's Work <ArrowUpRight size={14} />
-            </Link>
+            <Magnetic>
+              <Link
+                to="/contact"
+                className="btn-primary hidden-mobile"
+                style={{ padding: '10px 24px', fontSize: '0.85rem' }}
+              >
+                Start a Project <ArrowUpRight size={14} />
+              </Link>
+            </Magnetic>
 
             {/* Mobile hamburger */}
             <button
@@ -196,9 +202,15 @@ export default function Navbar() {
               );
             })}
             <div style={{ marginTop: 24 }}>
-              <Link to="/contact" className="btn-primary" onClick={() => setMobileOpen(false)}>
-                Let's Work <ArrowUpRight size={14} />
-              </Link>
+              <Magnetic>
+                <Link
+                  to="/contact"
+                  className="btn-primary"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Start a Project <ArrowUpRight size={16} />
+                </Link>
+              </Magnetic>
             </div>
           </motion.div>
         )}

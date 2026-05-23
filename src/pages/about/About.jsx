@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
 import { FileText, Compass, Feather, ShieldCheck, ArrowUpRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import Magnetic from '../../components/Magnetic';
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 28 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, margin: '-60px' },
-  transition: { duration: 0.6, delay, ease: [0.25, 1, 0.5, 1] },
+  transition: { duration: 0.4, delay, ease: [0.25, 1, 0.5, 1] },
 });
 
 export default function About() {
@@ -150,11 +151,11 @@ export default function About() {
                     ✦
                   </div>
                   <div style={{ textAlign: 'center' }}>
-                    <h3 style={{
+                    <div style={{
                       fontFamily: "'Sora', sans-serif",
                       fontSize: '1.1rem', fontWeight: 700, letterSpacing: '-0.03em',
                       color: 'var(--text-primary)',
-                    }}>Adharsh</h3>
+                    }}>Adharsh</div>
                     <p style={{
                       fontFamily: "'JetBrains Mono', monospace",
                       fontSize: '0.7rem', color: 'var(--text-secondary)',
@@ -206,20 +207,20 @@ export default function About() {
                 fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.05,
                 color: 'var(--text-primary)', marginBottom: 20,
               }}>
-                Premium design craft <br />
-                <span className="gradient-text">for digital experiences.</span>
+                Design is not decoration. <br />
+                <span className="gradient-text">It is a business multiplier.</span>
               </h1>
             </motion.div>
 
             <motion.div {...fadeUp(0.2)}>
               <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: 1.8 }}>
-                Hello, I am Adharsh. Over the past 6+ years, I have worked deeply within the UI/UX space — mapping complex user journeys, executing meticulous interface designs, and structuring visual design systems. I choose to operate as an independent freelance designer because it allows me to focus purely on what matters: crafting exceptional user experiences and beautiful interfaces.
+                I am Adharsh. For six years, I’ve operated exclusively in the trenches of UI/UX design. I don't build pretty screens that fail in production. I architect robust design systems and interface logic that solve deep user friction and drive revenue for ambitious startups.
               </p>
             </motion.div>
 
             <motion.div {...fadeUp(0.25)}>
               <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: 1.8 }}>
-                My philosophy is simple: beautiful design is the baseline, but intuitive, seamless functionality is the goal. I study user behavior, refine visual hierarchies, and construct layouts that feel inherently natural and effortless to navigate.
+                Clients hire me when their data-heavy dashboards overwhelm users, when their mobile apps suffer from churn, or when they need a visual identity that commands immediate authority. I strip away the cognitive load, enforce strict visual hierarchies, and deliver assets ready for flawless engineering handoff.
               </p>
             </motion.div>
 
@@ -237,19 +238,23 @@ export default function About() {
                   fontSize: '0.95rem', fontStyle: 'italic',
                   color: 'var(--text-primary)', lineHeight: 1.7,
                 }}>
-                  "I believe the best interfaces are the ones that dissolve into the background — they simply feel right, allowing the user to complete their tasks with zero cognitive load."
+                  "Good design makes you look. Exceptional design dissolves into the background, allowing the user to complete their exact objective without a second thought."
                 </p>
               </blockquote>
             </motion.div>
 
             <motion.div {...fadeUp(0.35)} style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-              <a href="/resume.pdf" target="_blank" download className="btn-primary">
-                <FileText size={15} />
-                Download Résumé
-              </a>
-              <Link to="/contact" className="btn-ghost">
-                Start a Project <ArrowUpRight size={15} />
-              </Link>
+              <Magnetic>
+                <a href="/resume.pdf" target="_blank" download className="btn-primary">
+                  <FileText size={15} />
+                  Download Résumé
+                </a>
+              </Magnetic>
+              <Magnetic>
+                <Link to="/contact" className="btn-ghost">
+                  Start a Project <ArrowUpRight size={15} />
+                </Link>
+              </Magnetic>
             </motion.div>
           </div>
         </div>

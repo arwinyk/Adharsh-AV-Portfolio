@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { projects } from '../../data/projectsData';
 import { ArrowRight, Filter, ArrowUpRight } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import Magnetic from '../../components/Magnetic';
 
 export default function Projects() {
+  const prefersReducedMotion = useReducedMotion();
   const [activeFilter, setActiveFilter] = useState('All');
   const [expandedSlug, setExpandedSlug] = useState(null);
 
@@ -44,9 +46,9 @@ export default function Projects() {
         </div>
 
         <motion.div
-          initial={{ opacity: 0, y: 28 }}
+          initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 28 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.65, ease: [0.25, 1, 0.5, 1] }}
+          transition={{ duration: prefersReducedMotion ? 0 : 0.4, ease: [0.25, 1, 0.5, 1] }}
         >
           <span className="section-label">Case Studies</span>
           <h1 style={{
@@ -70,9 +72,9 @@ export default function Projects() {
       {/* ── Filter Bar ── */}
       <section style={{ padding: '0 0 24px' }} className="container-xl">
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.2 }}
+          transition={{ duration: prefersReducedMotion ? 0 : 0.4, delay: prefersReducedMotion ? 0 : 0.1 }}
           style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10 }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginRight: 4, color: 'var(--text-secondary)' }}>
@@ -83,6 +85,7 @@ export default function Projects() {
             <button
               key={f}
               onClick={() => setActiveFilter(f)}
+              aria-pressed={activeFilter === f}
               style={{
                 padding: '7px 20px',
                 borderRadius: 'var(--radius-full)',
@@ -118,10 +121,10 @@ export default function Projects() {
                 <motion.div
                   layout
                   key={proj.slug}
-                  initial={{ opacity: 0, y: 24 }}
+                  initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 24 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.98 }}
-                  transition={{ duration: 0.45, delay: idx * 0.06 }}
+                  transition={{ duration: prefersReducedMotion ? 0 : 0.4, delay: prefersReducedMotion ? 0 : idx * 0.08 }}
                 >
                   {/* Card shell */}
                   <div
@@ -152,7 +155,12 @@ export default function Projects() {
                       {proj.coverImage ? (
                         <img
                           src={proj.coverImage}
+                          srcSet={`${proj.coverImage.replace('.webp', '-400w.webp')} 400w, ${proj.coverImage.replace('.webp', '-800w.webp')} 800w, ${proj.coverImage} 1200w`}
+                          sizes="(max-width: 600px) 400px, (max-width: 1024px) 800px, 1200px"
                           alt={proj.title}
+                          loading={idx === 0 ? "eager" : "lazy"}
+                          width="800"
+                          height="600"
                           style={{
                             width: '100%', height: '100%',
                             objectFit: 'cover', objectPosition: 'top',
@@ -462,19 +470,23 @@ export default function Projects() {
 
                             {/* CTA */}
                             <div style={{ display: 'flex', justifyContent: 'center', gap: 14, flexWrap: 'wrap' }}>
-                              <Link
-                                to={`/projects/${proj.slug}`}
-                                className="btn-primary"
-                                style={{ padding: '12px 28px' }}
-                              >
-                                View Full Case Study <ArrowUpRight size={15} />
-                              </Link>
-                              <button
-                                onClick={() => toggleExpand(proj.slug)}
-                                className="btn-ghost"
-                              >
-                                Close
-                              </button>
+                              <Magnetic>
+                                <Link
+                                  to={`/projects/${proj.slug}`}
+                                  className="btn-primary"
+                                  style={{ padding: '12px 28px' }}
+                                >
+                                  View Full Case Study <ArrowUpRight size={15} />
+                                </Link>
+                              </Magnetic>
+                              <Magnetic>
+                                <button
+                                  onClick={() => toggleExpand(proj.slug)}
+                                  className="btn-ghost"
+                                >
+                                  Close
+                                </button>
+                              </Magnetic>
                             </div>
 
                           </div>

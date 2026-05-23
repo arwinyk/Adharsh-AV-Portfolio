@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Mail, Calendar, ArrowUpRight } from 'lucide-react';
+import Magnetic from './Magnetic';
 
 const SocialLink = ({ href, label, children }) => (
   <a
@@ -211,13 +212,15 @@ export default function Footer() {
               <Calendar size={15} />
               Book a 15m discovery call
             </a>
-            <Link
-              to="/contact"
-              className="btn-primary"
-              style={{ marginTop: 8, padding: '10px 22px', fontSize: '0.8rem', width: 'fit-content' }}
-            >
-              Start a Project <ArrowUpRight size={13} />
-            </Link>
+            <Magnetic>
+              <Link
+                to="/contact"
+                className="btn-primary"
+                style={{ marginTop: 8, padding: '16px 36px', fontSize: '1rem', width: 'fit-content' }}
+              >
+                Let's Build Something Great <ArrowUpRight size={18} />
+              </Link>
+            </Magnetic>
           </div>
         </div>
 

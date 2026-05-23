@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import Header from './Header';
 import Footer from './Footer';
 import WhatsAppButton from './WhatsAppButton';
-import Lenis from '@studio-freight/lenis';
+import CustomCursor from './CustomCursor';
 import { motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 
@@ -14,28 +14,37 @@ export default function Layout({ children }) {
   }, [pathname]);
 
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      smoothTouch: false,
-      touchMultiplier: 2,
-      infinite: false,
+    let lenis;
+    let rafId;
+
+    // Delay the layout read (window.innerWidth) to prevent forced synchronous reflows
+    requestAnimationFrame(() => {
+      if (window.innerWidth < 768) return;
+
+      import('@studio-freight/lenis').then(({ default: Lenis }) => {
+        lenis = new Lenis({
+          duration: 1.2,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          orientation: 'vertical',
+          gestureOrientation: 'vertical',
+          smoothWheel: true,
+          wheelMultiplier: 1,
+          smoothTouch: false,
+          touchMultiplier: 2,
+          infinite: false,
+        });
+
+        function raf(time) {
+          lenis.raf(time);
+          rafId = requestAnimationFrame(raf);
+        }
+        rafId = requestAnimationFrame(raf);
+      });
     });
 
-    let rafId;
-    function raf(time) {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    }
-    rafId = requestAnimationFrame(raf);
-
     return () => {
-      cancelAnimationFrame(rafId);
-      lenis.destroy();
+      if (rafId) cancelAnimationFrame(rafId);
+      if (lenis) lenis.destroy();
     };
   }, []);
 
@@ -50,8 +59,10 @@ export default function Layout({ children }) {
         color: 'var(--text-primary)',
         transition: 'background 0.3s ease, color 0.3s ease',
         overflowX: 'hidden',
+        cursor: 'none', // Hide default cursor for premium feel
       }}
     >
+      <CustomCursor />
       {/* Global ambient light blobs */}
       <div
         aria-hidden="true"

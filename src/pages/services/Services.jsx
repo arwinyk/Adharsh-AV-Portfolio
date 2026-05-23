@@ -6,10 +6,10 @@ import {
 import { motion } from 'framer-motion';
 
 const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 24 },
+  initial: { opacity: 0, y: 32 },
   whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: '-60px' },
-  transition: { duration: 0.55, delay, ease: [0.25, 1, 0.5, 1] },
+  viewport: { once: true, margin: '-80px' },
+  transition: { duration: 0.4, delay, ease: [0.16, 1, 0.3, 1] },
 });
 
 export default function Services() {
@@ -218,12 +218,12 @@ export default function Services() {
                   background: `${svc.color}08`,
                   border: `1px solid ${svc.color}18`,
                 }}>
-                  <h4 style={{
+                  <h3 style={{
                     fontFamily: "'JetBrains Mono', monospace",
                     fontSize: '0.62rem', textTransform: 'uppercase',
                     letterSpacing: '0.14em', color: svc.color,
                     fontWeight: 600, marginBottom: 6,
-                  }}>Ideal Client Match</h4>
+                  }}>Ideal Client Match</h3>
                   <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.7 }}>{svc.ideal}</p>
                 </div>
               </div>

@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { Mail, Phone, MapPin, Calendar, CheckCircle, Loader, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { db } from '../../firebase';
+import Magnetic from '../../components/Magnetic';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 24 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, margin: '-60px' },
-  transition: { duration: 0.55, delay, ease: [0.25, 1, 0.5, 1] },
+  transition: { duration: 0.4, delay, ease: [0.25, 1, 0.5, 1] },
 });
 
 export default function Contact() {
@@ -327,25 +328,27 @@ ${form.message}`;
                   </div>
 
                   {/* Submit */}
-                  <button
-                    type="submit"
-                    className="btn-primary"
-                    disabled={status === 'loading'}
-                    style={{
-                      padding: '15px 36px', fontSize: '0.9rem',
-                      width: 'fit-content',
-                      opacity: status === 'loading' ? 0.7 : 1,
-                    }}
-                  >
-                    {status === 'loading' ? (
-                      <>
-                        <Loader size={16} style={{ animation: 'spin-slow 1s linear infinite' }} />
-                        Sending...
-                      </>
-                    ) : (
-                      <>Send Project Brief →</>
-                    )}
-                  </button>
+                  <Magnetic>
+                    <button
+                      type="submit"
+                      className="btn-primary"
+                      disabled={status === 'loading'}
+                      style={{
+                        padding: '15px 36px', fontSize: '0.9rem',
+                        width: 'fit-content',
+                        opacity: status === 'loading' ? 0.7 : 1,
+                      }}
+                    >
+                      {status === 'loading' ? (
+                        <>
+                          <Loader size={16} style={{ animation: 'spin-slow 1s linear infinite' }} />
+                          Sending...
+                        </>
+                      ) : (
+                        <>Send Project Brief →</>
+                      )}
+                    </button>
+                  </Magnetic>
 
                   <p style={{
                     fontSize: '0.75rem', color: 'var(--text-tertiary)', lineHeight: 1.7,

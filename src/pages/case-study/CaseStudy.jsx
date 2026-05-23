@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { projects } from '../../data/projectsData';
 import {
-  ArrowLeft, ArrowRight, Target, LayoutGrid
+  ArrowLeft, ArrowRight, Target, LayoutGrid, ArrowUpRight, ChevronLeft, ChevronRight
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import Magnetic from '../../components/Magnetic';
 
 const premiumEasing = [0.16, 1, 0.3, 1];
 
@@ -12,8 +13,174 @@ const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 32 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, margin: '-80px' },
-  transition: { duration: 0.8, delay, ease: premiumEasing },
+  transition: { duration: 0.4, delay, ease: [0.25, 1, 0.5, 1] },
 });
+
+function ScreenCarousel({ slides }) {
+  const [current, setCurrent] = useState(0);
+  const [direction, setDirection] = useState(0);
+  const prefersReducedMotion = useReducedMotion();
+  const dragStartX = useRef(0);
+
+  const go = (dir) => {
+    const next = current + dir;
+    if (next < 0 || next >= slides.length) return;
+    setDirection(dir);
+    setCurrent(next);
+  };
+
+  const variants = {
+    enter: (d) => ({ x: prefersReducedMotion ? 0 : d > 0 ? '100%' : '-100%', opacity: prefersReducedMotion ? 0 : 1 }),
+    center: { x: 0, opacity: 1 },
+    exit: (d) => ({ x: prefersReducedMotion ? 0 : d > 0 ? '-100%' : '100%', opacity: prefersReducedMotion ? 0 : 1 }),
+  };
+
+  const slide = slides[current];
+  const isMobile = slide.frame === 'mobile';
+
+  return (
+    <section style={{ padding: '80px 0', background: 'var(--bg-base)' }}>
+      <div className="container-xl">
+        <motion.div {...fadeUp(0)} style={{ textAlign: 'center', marginBottom: 48 }}>
+          <span className="section-label" style={{ justifyContent: 'center' }}>All Screens</span>
+          <h1 style={{
+            fontFamily: "'Sora', sans-serif", fontSize: 'clamp(2rem, 4vw, 3rem)',
+            fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.1,
+          }}>
+            Visual <span className="gradient-text">Walkthrough.</span>
+          </h1>
+        </motion.div>
+
+        {/* Carousel Viewport */}
+        <div style={{
+          position: 'relative',
+          maxWidth: isMobile ? 360 : 900,
+          margin: '0 auto',
+          userSelect: 'none',
+        }}>
+          {/* Slide area */}
+          <div style={{
+            overflow: 'hidden',
+            borderRadius: isMobile ? 44 : 20,
+            boxShadow: '0 40px 100px rgba(0,0,0,0.5)',
+            border: '1px solid rgba(255,255,255,0.08)',
+            background: 'var(--bg-secondary)',
+          }}>
+            <AnimatePresence custom={direction} mode="popLayout" initial={false}>
+              <motion.div
+                key={current}
+                custom={direction}
+                variants={variants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.35, ease: [0.25, 1, 0.5, 1] }}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.15}
+                onDragStart={(_, info) => { dragStartX.current = info.point.x; }}
+                onDragEnd={(_, info) => {
+                  const delta = info.point.x - dragStartX.current;
+                  if (delta < -50) go(1);
+                  else if (delta > 50) go(-1);
+                }}
+                style={{ cursor: 'grab' }}
+              >
+                <img
+                  src={slide.src}
+                  srcSet={`${slide.src.replace('.webp', '-400w.webp')} 400w, ${slide.src.replace('.webp', '-800w.webp')} 800w, ${slide.src} 1200w`}
+                  sizes="(max-width: 600px) 400px, (max-width: 1024px) 800px, 1200px"
+                  alt={slide.label}
+                  draggable={false}
+                  width={isMobile ? 360 : 800}
+                  height={isMobile ? 720 : 500}
+                  style={{ width: '100%', height: 'auto', display: 'block', pointerEvents: 'none' }}
+                />
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* Left Arrow */}
+          {current > 0 && (
+            <button
+              onClick={() => go(-1)}
+              aria-label="Previous screen"
+              style={{
+                position: 'absolute', left: isMobile ? -56 : -64, top: '50%',
+                transform: 'translateY(-50%)',
+                width: 44, height: 44, borderRadius: '50%',
+                background: 'var(--bg-secondary)', border: '1px solid var(--border)',
+                color: 'var(--text-primary)', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                transition: 'border-color 0.2s, background 0.2s',
+                zIndex: 2,
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'rgba(59,130,246,0.1)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'var(--bg-secondary)'; }}
+            >
+              <ChevronLeft size={18} />
+            </button>
+          )}
+
+          {/* Right Arrow */}
+          {current < slides.length - 1 && (
+            <button
+              onClick={() => go(1)}
+              aria-label="Next screen"
+              style={{
+                position: 'absolute', right: isMobile ? -56 : -64, top: '50%',
+                transform: 'translateY(-50%)',
+                width: 44, height: 44, borderRadius: '50%',
+                background: 'var(--bg-secondary)', border: '1px solid var(--border)',
+                color: 'var(--text-primary)', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                transition: 'border-color 0.2s, background 0.2s',
+                zIndex: 2,
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'rgba(59,130,246,0.1)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'var(--bg-secondary)'; }}
+            >
+              <ChevronRight size={18} />
+            </button>
+          )}
+        </div>
+
+        {/* Label */}
+        <p style={{
+          textAlign: 'center', marginTop: 20,
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: '0.8rem', color: 'var(--text-secondary)',
+          letterSpacing: '0.08em',
+        }}>
+          {slide.label}
+        </p>
+
+        {/* Dot Indicators */}
+        <div style={{
+          display: 'flex', justifyContent: 'center',
+          gap: 8, marginTop: 20,
+        }}>
+          {slides.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => { setDirection(i > current ? 1 : -1); setCurrent(i); }}
+              aria-label={`Go to screen ${i + 1}`}
+              style={{
+                width: i === current ? 24 : 8,
+                height: 8,
+                borderRadius: 99,
+                background: i === current ? 'var(--accent)' : 'rgba(255,255,255,0.3)',
+                border: 'none', cursor: 'pointer', padding: 0,
+                transition: 'width 0.3s ease, background 0.3s ease',
+              }}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 
 export default function CaseStudy() {
   const { slug } = useParams();
@@ -33,7 +200,15 @@ export default function CaseStudy() {
           <div style={{
             position: 'absolute', inset: 0, zIndex: 0,
           }}>
-            <img src={project.coverImage} alt={project.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <img 
+              src={project.coverImage} 
+              srcSet={`${project.coverImage.replace('.webp', '-800w.webp')} 800w, ${project.coverImage.replace('.webp', '-1200w.webp')} 1200w, ${project.coverImage} 1600w`}
+              sizes="100vw"
+              alt={project.title} 
+              width="1200" 
+              height="800" 
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+            />
             <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, var(--bg-base) 0%, rgba(5,5,7,0.3) 100%)' }} />
           </div>
         ) : (
@@ -187,12 +362,17 @@ export default function CaseStudy() {
         </section>
       )}
 
-      {/* ── Sticky Screen Showcase ── */}
+      {/* ── Part 1: Carousel ── */}
+      {project.slides && project.slides.length > 0 && (
+        <ScreenCarousel slides={project.slides} />
+      )}
+
+      {/* ── Part 2: Screen Breakdown ── */}
       {project.screens && project.screens.length > 0 && (
         <section style={{ background: 'var(--bg-secondary)', padding: '120px 0' }}>
           <div className="container-xl">
-            <motion.div {...fadeUp(0)} style={{ marginBottom: 80 }}>
-              <span className="section-label">Screen Breakdown</span>
+            <motion.div {...fadeUp(0)} style={{ marginBottom: 80, textAlign: 'center' }}>
+              <span className="section-label" style={{ justifyContent: 'center' }}>Screen Breakdown</span>
               <h2 style={{
                 fontFamily: "'Sora', sans-serif", fontSize: 'clamp(2.5rem, 5vw, 4rem)',
                 fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.1,
@@ -201,60 +381,107 @@ export default function CaseStudy() {
               </h2>
             </motion.div>
 
-            <div style={{ position: 'relative' }}>
-              {project.screens.map((screen, si) => (
-                <div key={si} style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', position: 'relative', borderBottom: si !== project.screens.length - 1 ? '1px solid var(--border)' : 'none', padding: '80px 0' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, width: '100%', alignItems: 'center' }}>
-                    
-                    {/* Left: Sticky Image Container */}
-                    <div style={{ position: 'relative', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      {project.slides && project.slides[si] ? (
-                        <div 
-                          style={{
-                            width: '100%', maxWidth: project.slides[si].frame === 'mobile' ? 360 : 800,
-                            position: 'sticky', top: '20vh',
-                            borderRadius: project.slides[si].frame === 'mobile' ? 48 : 16,
-                            overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
-                            border: '1px solid rgba(255,255,255,0.1)',
-                          }}
-                        >
-                          <img src={project.slides[si].src} alt={screen.title} style={{ width: '100%', display: 'block' }} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 120 }}>
+              {project.screens.map((screen, si) => {
+                const slide = project.slides && project.slides[si];
+                const isOdd = si % 2 === 0; // 0-indexed: even index = odd screen = image left
+                return (
+                  <motion.div
+                    key={si}
+                    {...fadeUp(0)}
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                      gap: 64,
+                      alignItems: 'center',
+                    }}
+                  >
+                    {/* Image */}
+                    <div style={{ order: isOdd ? 1 : 2 }}>
+                      {slide ? (
+                        <div style={{
+                          borderRadius: slide.frame === 'mobile' ? 40 : 16,
+                          overflow: 'hidden',
+                          boxShadow: '0 24px 80px rgba(0,0,0,0.4)',
+                          border: '1px solid rgba(255,255,255,0.08)',
+                          maxWidth: slide.frame === 'mobile' ? 340 : '100%',
+                          margin: isOdd ? '0 auto 0 0' : '0 0 0 auto',
+                        }}>
+                          <img
+                            src={slide.src}
+                            srcSet={`${slide.src.replace('.webp', '-400w.webp')} 400w, ${slide.src.replace('.webp', '-800w.webp')} 800w, ${slide.src} 1200w`}
+                            sizes="(max-width: 600px) 400px, (max-width: 1024px) 800px, 1200px"
+                            alt={screen.title}
+                            loading={si === 0 ? "eager" : "lazy"}
+                            width={slide.frame === 'mobile' ? 360 : 800}
+                            height={slide.frame === 'mobile' ? 720 : 500}
+                            style={{ width: '100%', height: 'auto', display: 'block' }}
+                          />
                         </div>
                       ) : (
-                        <div style={{ position: 'sticky', top: '30vh', width: '100%', aspectRatio: '1', background: 'rgba(255,255,255,0.02)', borderRadius: 32, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                           <LayoutGrid size={48} opacity={0.2} />
+                        <div style={{
+                          aspectRatio: '9/16', background: 'rgba(255,255,255,0.02)',
+                          borderRadius: 32, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        }}>
+                          <LayoutGrid size={48} opacity={0.2} />
                         </div>
                       )}
                     </div>
 
-                    {/* Right: Scrolling Text */}
-                    <motion.div {...fadeUp(0)}>
-                      <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '1rem', color: 'var(--accent)', fontWeight: 700, marginBottom: 16 }}>
-                        {(si + 1).toString().padStart(2, '0')} // SCREEN
+                    {/* Text */}
+                    <div style={{ order: isOdd ? 2 : 1 }}>
+                      <div style={{
+                        fontFamily: "'JetBrains Mono', monospace", fontSize: '0.75rem',
+                        color: 'var(--accent)', fontWeight: 700, marginBottom: 12,
+                        textTransform: 'uppercase', letterSpacing: '0.15em',
+                      }}>
+                        {(si + 1).toString().padStart(2, '0')} — Screen
                       </div>
-                      <h3 style={{ fontFamily: "'Sora', sans-serif", fontSize: 'clamp(1.8rem, 3vw, 2.5rem)', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.03em', lineHeight: 1.15, marginBottom: 24 }}>
+                      <h3 style={{
+                        fontFamily: "'Sora', sans-serif",
+                        fontSize: 'clamp(1.6rem, 3vw, 2.4rem)',
+                        fontWeight: 800, color: 'var(--text-primary)',
+                        letterSpacing: '-0.03em', lineHeight: 1.15, marginBottom: 20,
+                      }}>
                         {screen.title.split('—')[0]}
-                        <br/>
-                        <span style={{ color: 'var(--text-secondary)', fontSize: '0.8em' }}>{screen.title.split('—')[1]}</span>
+                        {screen.title.includes('—') && (
+                          <>
+                            <br />
+                            <span style={{ color: 'var(--text-secondary)', fontSize: '0.75em' }}>
+                              {screen.title.split('—')[1]}
+                            </span>
+                          </>
+                        )}
                       </h3>
-                      <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', lineHeight: 1.8, marginBottom: 40 }}>
+                      <p style={{
+                        fontSize: '1.05rem', color: 'var(--text-secondary)',
+                        lineHeight: 1.8, marginBottom: 36,
+                      }}>
                         {screen.description}
                       </p>
 
-                      <h4 style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.15em', color: 'var(--text-primary)', marginBottom: 20 }}>Design Decisions</h4>
-                      <ul style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                      <h4 style={{
+                        fontFamily: "'JetBrains Mono', monospace", fontSize: '0.7rem',
+                        textTransform: 'uppercase', letterSpacing: '0.15em',
+                        color: 'var(--text-primary)', marginBottom: 16,
+                      }}>Design Decisions</h4>
+                      <ul style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                         {screen.decisions.map((dec, di) => (
-                          <li key={di} style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
-                            <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--accent)', marginTop: 8, flexShrink: 0 }} />
-                            <span style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{dec}</span>
+                          <li key={di} style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
+                            <div style={{
+                              width: 6, height: 6, borderRadius: '50%',
+                              background: 'var(--accent)', marginTop: 9, flexShrink: 0,
+                            }} />
+                            <span style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: 1.7 }}>
+                              {dec}
+                            </span>
                           </li>
                         ))}
                       </ul>
-                    </motion.div>
-
-                  </div>
-                </div>
-              ))}
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -279,7 +506,7 @@ export default function CaseStudy() {
                 borderRadius: 'var(--radius-xl)', overflow: 'hidden',
                 border: '1px solid var(--border)', background: 'var(--bg-tertiary)',
               }}>
-                 <img src={slide.src} alt={slide.label} style={{ width: '100%', display: 'block', transition: 'transform 0.5s ease' }} onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'} onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'} />
+                 <img src={slide.src} alt={slide.label} loading="lazy" width={slide.frame === 'mobile' ? 360 : 800} height={slide.frame === 'mobile' ? 720 : 500} style={{ width: '100%', height: 'auto', display: 'block', transition: 'transform 0.5s ease' }} onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'} onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'} />
                  <div style={{ padding: 20, borderTop: '1px solid var(--border)' }}>
                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{slide.label}</span>
                  </div>
@@ -316,9 +543,11 @@ export default function CaseStudy() {
             >
               {nextProject.title}
             </h2>
-            <div className="btn-primary" style={{ padding: '16px 36px', fontSize: '1rem' }}>
-              Explore Project <ArrowRight size={18} />
-            </div>
+            <Magnetic>
+              <div className="btn-primary" style={{ padding: '16px 36px', fontSize: '1rem' }}>
+                Let's build together <ArrowUpRight size={18} />
+              </div>
+            </Magnetic>
           </Link>
         </div>
       </section>

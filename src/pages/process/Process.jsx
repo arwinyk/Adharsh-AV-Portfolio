@@ -6,10 +6,10 @@ import {
 import { motion } from 'framer-motion';
 
 const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 24 },
+  initial: { opacity: 0, y: 32 },
   whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: '-60px' },
-  transition: { duration: 0.55, delay, ease: [0.25, 1, 0.5, 1] },
+  viewport: { once: true, margin: '-80px' },
+  transition: { duration: 0.4, delay, ease: [0.16, 1, 0.3, 1] },
 });
 
 export default function Process() {
@@ -207,11 +207,11 @@ export default function Process() {
                       {step.icon}
                     </div>
                   </div>
-                  <h3 style={{
+                  <h2 style={{
                     fontFamily: "'Sora', sans-serif",
                     fontSize: 'clamp(1.1rem, 2vw, 1.4rem)',
                     fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--text-primary)',
-                  }}>{step.title}</h3>
+                  }}>{step.title}</h2>
                   <p style={{
                     fontSize: '0.875rem', color: 'var(--text-secondary)',
                     lineHeight: 1.75, fontWeight: 500,
@@ -223,11 +223,11 @@ export default function Process() {
                   className="glass-card"
                   style={{ padding: 24, borderLeft: `2px solid ${step.color}30` }}
                 >
-                  <h4 style={{
+                  <h3 style={{
                     fontFamily: "'JetBrains Mono', monospace",
                     fontSize: '0.62rem', textTransform: 'uppercase',
                     letterSpacing: '0.14em', color: 'var(--text-primary)', fontWeight: 700, marginBottom: 14,
-                  }}>Key Activities</h4>
+                  }}>Key Activities</h3>
                   <ul style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                     {step.activities.map((a, ai) => (
                       <li key={ai} style={{
@@ -253,11 +253,11 @@ export default function Process() {
                     background: `${step.color}05`,
                   }}
                 >
-                  <h4 style={{
+                  <h3 style={{
                     fontFamily: "'JetBrains Mono', monospace",
                     fontSize: '0.62rem', textTransform: 'uppercase',
                     letterSpacing: '0.14em', color: step.color, fontWeight: 700, marginBottom: 12,
-                  }}>Phase Handoff Spec</h4>
+                  }}>Phase Handoff Spec</h3>
                   <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.75, fontWeight: 500 }}>
                     {step.handoff}
                   </p>

@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { Sun, Moon, Menu, X, ArrowUpRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Magnetic from './Magnetic';
 
 export default function Header() {
   const { theme, toggle } = useTheme();
@@ -144,19 +145,22 @@ export default function Header() {
             </button>
 
             {/* CTA button */}
-            <Link
-              to="/contact"
-              className="btn-primary hidden-mobile"
-              style={{ padding: '9px 22px', fontSize: '0.825rem' }}
-            >
-              Let's Work <ArrowUpRight size={14} />
-            </Link>
+            <Magnetic>
+              <Link
+                to="/contact"
+                className="btn-primary hidden-mobile"
+                style={{ padding: '9px 22px', fontSize: '0.825rem' }}
+              >
+                Let's Work <ArrowUpRight size={14} />
+              </Link>
+            </Magnetic>
 
             {/* Mobile hamburger */}
             <button
               onClick={() => setMobileMenuOpen(o => !o)}
               className="show-mobile"
               aria-label="Toggle menu"
+              aria-expanded={mobileMenuOpen}
               style={{
                 width: 36, height: 36,
                 borderRadius: 'var(--radius-full)',
@@ -229,13 +233,15 @@ export default function Header() {
               transition={{ delay: 0.3, duration: 0.4 }}
               style={{ marginTop: 24, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}
             >
-              <Link
-                to="/contact"
-                className="btn-primary"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Let's Work Together <ArrowUpRight size={16} />
-              </Link>
+              <Magnetic>
+                <Link
+                  to="/contact"
+                  className="btn-primary"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Let's Work Together <ArrowUpRight size={16} />
+                </Link>
+              </Magnetic>
             </motion.div>
           </motion.div>
         )}
